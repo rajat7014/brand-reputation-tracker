@@ -126,7 +126,7 @@ Node.js runtime APIs
 
 ⚙️ Setup Instructions
 1. Clone the project
-git clone https://github.com/your-username/brand-reputation-tracker
+git clone https://github.com/rajat7014/brand-reputation-tracker
 cd brand-reputation-tracker
 
 2. Install dependencies
