@@ -1,201 +1,19 @@
-// 'use client'
-
-// import { useState, useEffect, useRef } from 'react'
-
-// export default function Dashboard() {
-//   const [brand, setBrand] = useState('')
-//   const [customBrand, setCustomBrand] = useState('')
-
-//   const [clusters, setClusters] = useState([])
-//   const [loading, setLoading] = useState(false)
-//   const [step, setStep] = useState('')
-
-//   // ---- Step 1: Fetch & Store Mentions ----
-//   async function fetchMentions(selectedBrand) {
-//     setStep('mentions')
-//     const res = await fetch('/api/mentions', {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ brand: selectedBrand }),
-//     })
-//     return res.json()
-//   }
-
-//   // ---- Step 2: Fetch Topic Clusters ----
-//   async function loadTopics(selectedBrand) {
-//     setStep('topics')
-//     const res = await fetch('/api/topics', {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ brand: selectedBrand }),
-//     })
-//     const data = await res.json()
-//     setClusters(data.clusters || [])
-//   }
-
-//   // ---- FULL PROCESS HANDLER ----
-//   async function handleTrackBrand() {
-//     const selectedBrand = customBrand.trim() || brand
-
-//     if (!selectedBrand) {
-//       alert('Please select or enter a brand.')
-//       return
-//     }
-
-//     setLoading(true)
-//     setClusters([])
-
-//     // Step 1: Fetch mentions
-//     await fetchMentions(selectedBrand)
-
-//     // Step 2: Generate topics
-//     await loadTopics(selectedBrand)
-
-//     setLoading(false)
-//   }
-
-//   return (
-//     <div className='p-8 space-y-10'>
-//       <h1 className='text-4xl font-bold'>Brand Insight Dashboard</h1>
-
-//       {/* ---------------- BRAND SELECTION AREA ---------------- */}
-//       <div className='p-5 border rounded-xl bg-gray-800 space-y-4'>
-//         {/* Common Brand Dropdown */}
-//         <select
-//           value={brand}
-//           onChange={(e) => setBrand(e.target.value)}
-//           className='border p-2 rounded w-full text-black'
-//         >
-//           <option className='text-white' value=''>
-//             Select a common brand
-//           </option>
-//           <option value='tesla'>Tesla</option>
-//           <option value='rapido'>Rapido</option>
-//           <option value='apple'>Apple</option>
-//           <option value='zomato'>Zomato</option>
-//           <option value='blinkit'>Blinkit</option>
-//         </select>
-
-//         {/* Custom Brand Input */}
-//         <div>
-//           <label className='font-medium'>Or Track Custom Brand:</label>
-//           <input
-//             placeholder='Enter any brand (e.g., Paytm, Mamaearth)'
-//             value={customBrand}
-//             onChange={(e) => setCustomBrand(e.target.value)}
-//             className='border p-2 rounded w-full mt-1'
-//           />
-//         </div>
-
-//         {/* Track Brand Button */}
-//         <button
-//           onClick={handleTrackBrand}
-//           className='bg-blue-700 text-white px-4 py-2 rounded w-full'
-//         >
-//           Track Brand
-//         </button>
-//       </div>
-
-//       {/* ---------------- PROCESS STATUS ---------------- */}
-//       {loading && step === 'mentions' && (
-//         <p className='text-lg text-blue-600'>Fetching brand mentions…</p>
-//       )}
-
-//       {loading && step === 'topics' && (
-//         <p className='text-lg text-green-600'>Generating topic clusters…</p>
-//       )}
-
-//       {/* ---------------- CLUSTER RESULTS ---------------- */}
-//       {!loading && clusters.length === 0 && (
-//         <p className='text-gray-600'>No clusters available yet.</p>
-//       )}
-
-//       {!loading && clusters.length > 0 && (
-//         <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-//           {clusters.map((c) => (
-//             <TopicCard
-//               key={c.clusterId}
-//               cluster={c}
-//               reload={() => loadTopics(brand || customBrand)}
-//             />
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   )
-// }
-
-// /* ---------------------- Topic Card Component ---------------------- */
-
-// function TopicCard({ cluster, reload }) {
-//   return (
-//     <div className='p-6 rounded-xl border bg-white shadow hover:shadow-md transition'>
-//       <h2 className='text-2xl font-semibold mb-3'>{cluster.label}</h2>
-
-//       <p className='text-gray-700 mb-2'>
-//         Mentions in topic: <b>{cluster.count}</b>
-//       </p>
-
-//       {/* Word Cloud */}
-//       <TopicWordCloud words={cluster.words} />
-
-//       <button
-//         onClick={reload}
-//         className='mt-4 bg-blue-600 text-white px-4 py-2 rounded'
-//       >
-//         Refresh Topics
-//       </button>
-//     </div>
-//   )
-// }
-
-// /* ---------------------- WordCloud Component ---------------------- */
-
-// function TopicWordCloud({ words }) {
-//   const canvasRef = useRef(null)
-
-//   useEffect(() => {
-//     if (!words || words.length === 0) return
-
-//     async function renderCloud() {
-//       const WordCloud = (await import('wordcloud')).default
-
-//       const wordList = words.map((w) => [
-//         w,
-//         Math.floor(Math.random() * 40) + 15,
-//       ])
-
-//       WordCloud(canvasRef.current, {
-//         list: wordList,
-//         weightFactor: 2,
-//         rotateRatio: 0.4,
-//         rotationSteps: 2,
-//         backgroundColor: '#ffffff',
-//         color: () => '#' + Math.floor(Math.random() * 16777215).toString(16),
-//       })
-//     }
-
-//     renderCloud()
-//   }, [words])
-
-//   return (
-//     <canvas
-//       ref={canvasRef}
-//       width={400}
-//       height={250}
-//       className='border rounded'
-//     />
-//   )
-// }
-
-// === Advanced Dashboard (Phase 5) — Replace your entire dashboard/page.jsx ===
-
+// === DashboardPage with AI Summary + Auth Protection + PDF Export ===
 'use client'
+
 import { useEffect, useState, useRef } from 'react'
+import { useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
 import SentimentCharts from '@/components/Charts/SentimentCharts'
 import Feed from '@/components/Mentions/Feed'
-
+import SummaryPanel from '@/components/AI/SummaryPanel'
+import { signOut } from 'next-auth/react'
 export default function DashboardPage() {
+  const { data: session } = useSession()
+
+  // --- AUTH PROTECTION ---
+  if (!session) redirect('/login')
+
   const [brand, setBrand] = useState('')
   const [filters, setFilters] = useState({})
   const [clusters, setClusters] = useState([])
@@ -248,6 +66,18 @@ export default function DashboardPage() {
         <h1 className='text-2xl font-bold'>Brand Reputation Tracker</h1>
 
         <div className='flex gap-3 items-center'>
+          <span className='mr-4 text-gray-700 font-medium'>
+            Logged in as: {session?.user?.email}
+          </span>
+
+          {/* 🔥 LOGOUT BUTTON */}
+          <button
+            onClick={() => signOut({ callbackUrl: '/login' })}
+            className='px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700'
+          >
+            Logout
+          </button>
+
           <input
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
@@ -255,41 +85,21 @@ export default function DashboardPage() {
             className='px-3 py-2 border rounded'
           />
 
-          {/* <button
-            onClick={() => {
-              fetchClusters()
-              checkSpike()
-              setFilters((f) => ({ ...f, q: brand }))
-            }}
-            className='px-3 py-2 bg-blue-600 text-white rounded'
-          >
-            Monitor
-          </button> */}
-
           <button
             onClick={async () => {
-              if (!brand.trim()) {
-                alert('Please enter a brand.')
-                return
-              }
+              if (!brand.trim()) return alert('Please enter a brand.')
 
-              // 1️⃣ Fetch mentions from all sources
               await fetch('/api/mentions', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ brand }),
               })
 
-              // 2️⃣ Refresh topic clusters
               await fetchClusters()
-
-              // 3️⃣ Refresh spike alerts
               await checkSpike()
-
-              // 4️⃣ Apply filters for sentiment charts + feed component
               setFilters((f) => ({ ...f, q: brand }))
             }}
-            className='px-3 py-2 bg-blue-600 text-white rounded cursor-pointer hover:bg-blue-700 transition-colors'
+            className='px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700'
           >
             Monitor
           </button>
@@ -305,7 +115,10 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <section className='grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6'>
+      {/* AI Sentiment Summary Panel */}
+      <SummaryPanel brand={brand} />
+
+      <section className='grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 mt-6'>
         <div className='col-span-2'>
           <SentimentCharts brand={brand} />
 
@@ -321,7 +134,7 @@ export default function DashboardPage() {
                   <button
                     className='mt-2 text-sm text-blue-600'
                     onClick={() =>
-                      setFilters((f) => ({ ...f, topic: c.label || c.topic }))
+                      setFilters((f) => ({ ...f, topic: c.label }))
                     }
                   >
                     Filter
@@ -333,34 +146,6 @@ export default function DashboardPage() {
         </div>
 
         <aside>
-          {/* <div className='p-4 border rounded mb-4'>
-            <h4 className='font-semibold'>Spike Alerts</h4>
-            {spikeInfo ? (
-              <div className='mt-2'>
-                <div>
-                  Recent count: <b>{spikeInfo.recentCount}</b>
-                </div>
-                <div>
-                  Historic rate/min:{' '}
-                  <b>{spikeInfo.historicRatePerMinute.toFixed(2)}</b>
-                </div>
-                <div>
-                  Ratio: <b>{spikeInfo.ratio.toFixed(2)}</b>
-                </div>
-                <div
-                  className={`mt-2 ${
-                    spikeInfo.isSpike
-                      ? 'text-red-600 font-bold'
-                      : 'text-green-600'
-                  }`}
-                >
-                  {spikeInfo.isSpike ? 'Spike detected' : 'No spike'}
-                </div>
-              </div>
-            ) : (
-              <div className='opacity-75'>No spike data. Click Monitor.</div>
-            )}
-          </div> */}
           <div className='p-4 border rounded mb-4'>
             <h4 className='font-semibold'>Spike Alerts</h4>
 
@@ -378,8 +163,7 @@ export default function DashboardPage() {
                 </div>
 
                 <div>
-                  Ratio:
-                  <b>{spikeInfo?.ratio?.toFixed?.(2) ?? '0.00'}</b>
+                  Ratio: <b>{spikeInfo?.ratio?.toFixed?.(2) ?? '0.00'}</b>
                 </div>
 
                 <div
@@ -400,7 +184,6 @@ export default function DashboardPage() {
           <div className='p-4 border rounded'>
             <h4 className='font-semibold'>Filters</h4>
             <div className='mt-2 space-y-2'>
-              {/* SENTIMENT FILTER */}
               <select
                 onChange={(e) =>
                   setFilters((f) => ({ ...f, sentiment: e.target.value }))
@@ -413,7 +196,6 @@ export default function DashboardPage() {
                 <option value='negative'>Negative</option>
               </select>
 
-              {/* SOURCE FILTER – FIXED HERE */}
               <select
                 onChange={(e) =>
                   setFilters((f) => ({ ...f, source: e.target.value }))
@@ -430,7 +212,7 @@ export default function DashboardPage() {
 
               <button
                 onClick={() => setFilters((f) => ({ ...f }))}
-                className='w-full mt-2 p-2 bg-blue-600 text-white rounded cursor-pointer hover:to-blue-800'
+                className='w-full mt-2 p-2 bg-blue-600 text-white rounded'
               >
                 Apply
               </button>
