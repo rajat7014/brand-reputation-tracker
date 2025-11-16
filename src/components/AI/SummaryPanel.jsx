@@ -18,7 +18,7 @@ export default function SummaryPanel({ brand }) {
   }
 
   return (
-    <div className='p-4 border rounded bg-black mt-4'>
+    <div className='p-4 border rounded mt-4'>
       <h2 className='font-semibold text-xl mb-3'>AI Sentiment Summary</h2>
       <button
         onClick={generateSummary}
@@ -29,9 +29,7 @@ export default function SummaryPanel({ brand }) {
 
       {loading && <p className='mt-2 text-purple-600'>Generating summary…</p>}
 
-      {summary && (
-        <p className='mt-4 text-white whitespace-pre-line'>{summary}</p>
-      )}
+      {summary && <p className='mt-4 whitespace-pre-line'>{summary}</p>}
     </div>
   )
 }
