@@ -15,7 +15,7 @@ Repo Link: https://github.com/rajat7014/brand-reputation-tracker
 Marketers and brand managers often struggle to track online conversations happening across social media, news, forums, YouTube, GitHub, etc.
 
 This project provides a centralized real-time dashboard to monitor brand mentions, sentiment trends, topic clusters, and spike alerts.
-It also uses AI (Gemini 2.5 Flash) to generate an intelligent brand summary and PDF reports for quick decision-making.
+It also uses AI (Gemini 2.5 Flash) to generate an intelligent brand summary for quick decision-making.
 
 🎯 Features
 🔍 Brand Mention Tracking
