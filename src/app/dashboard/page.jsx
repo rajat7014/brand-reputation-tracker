@@ -42,23 +42,17 @@ export default function DashboardPage() {
     })()
   }, [])
 
+  // 🔄 Polling every 10 seconds
   useEffect(() => {
-    if (useSSE && typeof window !== 'undefined') {
-      if (eventSourceRef.current) eventSourceRef.current.close()
-      const es = new EventSource('/api/stream')
-      eventSourceRef.current = es
-      es.onmessage = (ev) => {
-        try {
-          const msg = JSON.parse(ev.data)
-          if (msg.type === 'snapshot') {
-            fetchClusters()
-            setFilters((f) => ({ ...f }))
-          }
-        } catch (e) {}
+    const interval = setInterval(async () => {
+      if (brand.trim()) {
+        await fetchClusters()
+        await checkSpike()
       }
-      return () => es.close()
-    }
-  }, [useSSE])
+    }, 10000) // 10 seconds
+
+    return () => clearInterval(interval)
+  }, [brand])
 
   return (
     <div className='p-6'>
@@ -103,15 +97,24 @@ export default function DashboardPage() {
           >
             Monitor
           </button>
+          <button
+            onClick={async () => {
+              await fetchClusters()
+              await checkSpike()
+            }}
+            className='px-3 py-2 bg-gray-700 text-white rounded hover:bg-gray-800'
+          >
+            Refresh
+          </button>
 
-          <label className='flex items-center gap-2'>
+          {/* <label className='flex items-center gap-2'>
             <input
               type='checkbox'
               checked={useSSE}
               onChange={(e) => setUseSSE(e.target.checked)}
             />
             Use SSE
-          </label>
+          </label> */}
         </div>
       </header>
 
